@@ -28,3 +28,7 @@ sudo apt-get install docker-ce
 read -p "Press enter to manage docker as a non-root user"
 sudo groupadd docker
 sudo usermod -aG docker $USER
+
+read -p "Press enter to add docker proxy"
+sudo mkdir /etc/systemd/system/docker.service.d
+sudo cp ./utilities/http-proxy.conf /etc/systemd/system/docker.service.d
