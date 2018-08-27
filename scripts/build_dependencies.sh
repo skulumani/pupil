@@ -31,4 +31,4 @@ sudo usermod -aG docker $USER
 
 read -p "Press enter to add docker proxy"
 sudo mkdir /etc/systemd/system/docker.service.d
-sudo cp ./utilities/http-proxy.conf /etc/systemd/system/docker.service.d
+sudo cp ./scripts/http-proxy.conf /etc/systemd/system/docker.service.d
