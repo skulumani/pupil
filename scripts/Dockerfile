@@ -23,6 +23,9 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86
     echo ". ~/anaconda3/etc/profile.d/conda.sh" >> ~/.bashrc
     # echo "conda activate base" >> ~/.bashrc
 
+# add all the data to the image
+ADD ../ /tmp/pupil
+
 # install python environment
 ADD eyetracking.yml /tmp/eyetracking.yml
 RUN conda env create -f /tmp/eyetracking.yml
