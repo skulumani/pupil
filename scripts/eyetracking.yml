@@ -1,7 +1,22 @@
 name: eyetracking
+channels:
+  - conda-forge
 dependencies:
-  - python=3.7
+  - python
   - numpy
   - scipy
   - ipython
   - matplotlib
+  - numexpr
+  - cython
+  - pyzmq
+  - pyopengl
+  - pyaudio
+  - pip
+  - av
+  - pip:
+    - msgpack
+    - git+https://github.com/zeromq/pyre
+    - git+https://github.com/pupil-labs/pyuvc
+    - git+https://github.com/pupil-labs/pyndsi
+    - git+https://github.com/pupil-labs/pyglui
