@@ -5,6 +5,7 @@
 
 OPENCV_VERSION=3.4.2
 TEMP_DIR="$(mktemp -d)"
+# TEMP_DIR="/media/sf_subversion/opencv_build"
 INSTALL_DIR="/usr/local/"
 
 # check if the temp dir was created
@@ -73,6 +74,7 @@ cmake \
     -D OPENCV_EXTRA_MODULES_PATH=$TEMP_DIR/opencv_contrib/modules \
     -D PYTHON_EXECUTABLE=$HOME/anaconda3/envs/eyetracking/bin/python \
     -D PYTHON3_EXECUTABLE=$HOME/anaconda3/envs/eyetracking/bin/python \
+    -D ENABLE_PRECOMPILED_HEADERS=OFF \
     ..
 
 echo "Make sure Python paths are correct"
@@ -84,4 +86,4 @@ sudo make install
 
 echo "Now symlinking OpenCV to anaconda path"
 read -p "Press Enter to continue"
-ln -s /usr/local/lib/python3.7/site-packages/cv2.cpython-37m-x86_64-linux-gnu.so $HOME/anaconda3/envs/eyetracking/lib/python3.7/site-packages/cv2.so
+# ln -s /usr/local/lib/python3.7/site-packages/cv2.cpython-37m-x86_64-linux-gnu.so $HOME/anaconda3/envs/eyetracking/lib/python3.7/site-packages/cv2.so
