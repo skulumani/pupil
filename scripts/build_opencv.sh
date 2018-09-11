@@ -74,9 +74,9 @@ cmake \
     -D OPENCV_EXTRA_MODULES_PATH=$TEMP_DIR/opencv_contrib/modules \
     -D PYTHON_EXECUTABLE=$HOME/anaconda3/envs/eyetracking/bin/python \
     -D PYTHON3_EXECUTABLE=$HOME/anaconda3/envs/eyetracking/bin/python \
-    -D ENABLE_PRECOMPILED_HEADERS=OFF \
     ..
 
+    # -D ENABLE_PRECOMPILED_HEADERS=OFF \
 echo "Make sure Python paths are correct"
 read -p "Press Enter to continue make install"
 

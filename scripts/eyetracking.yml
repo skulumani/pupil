@@ -2,6 +2,7 @@ name: eyetracking
 channels:
   - conda-forge
   - pytorch
+  - anaconda
 dependencies:
   - python
   - numpy
@@ -17,6 +18,7 @@ dependencies:
   - av
   - pytorch-cpu 
   - torchvision-cpu
+  - glib
   - pip:
     - msgpack
     - git+https://github.com/zeromq/pyre
