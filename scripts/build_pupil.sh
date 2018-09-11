@@ -6,7 +6,7 @@ WORK_DIR="$(pwd)"
 
 read -p "Press Enter to Install APT"
 echo "Installing APT packages"
-sudo apt-get install -y pkg-config git cmake build-essential nasm wget libusb-1.0-0-dev libglew-dev libglfw3-dev libtbb-dev libboost-dev libgoogle-glog-dev libatlas-base-dev 
+sudo apt-get install -y pkg-config git cmake build-essential nasm wget libusb-1.0-0-dev libglew-dev libglfw3-dev libtbb-dev libboost-dev libgoogle-glog-dev libatlas-base-dev libceres-dev
 
 read - p "Press Enter to Install TurboJPEG"
 echo "Install TurboJPEG"
@@ -38,4 +38,3 @@ read -p "Press Enter to continue"
 cd $WORK_DIR
 conda env update -f ./scripts/eyetracking.yml -n eyetracking
 
-# setup opencv at the end
