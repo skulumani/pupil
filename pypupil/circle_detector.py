@@ -306,7 +306,7 @@ def find_concentric_circles(edge, scale, img_contrast, found_pos, found_size, fi
         concentric_circle_clusters = []
         # CHAIN_APPROX_TC89_KCOS does not store absolutely all the contour points
         _, contours, hierarchy = cv2.findContours(edge, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_TC89_KCOS)
-
+        pdb.set_trace()
         if contours is None or hierarchy is None:
             return []
         clusters = get_nested_clusters(contours, hierarchy[0], min_ellipses_num)
