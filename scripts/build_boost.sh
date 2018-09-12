@@ -1,4 +1,4 @@
-OST_VER=1.68.0
+BOOST_VER="1.68.0"
 BOOST_SHA256_SUM="da3411ea45622579d419bfda66f45cd0f8c32a181d84adfa936f5688388995cf"
 BOOST_URL="https://dl.bintray.com/boostorg/release/${BOOST_VER}/source/boost_1_68_0.tar.gz"
 TEMP_DIR="$(mktemp -d)"
@@ -40,9 +40,9 @@ tar -xzf boost.tar.gz -C ./boost --strip-components=1
 # echo "Now copying to ${INSTALL_DIR}/boost"
 # sudo mv boost/boost ${INSTALL_DIR}
 
-echo "Remove old boost"
-sudo rm -rf /usr/include/boost
-sudo rm /usr/local/lib/libboost*
+# echo "Remove old boost"
+# sudo rm -rf /usr/include/boost
+# sudo rm /usr/local/lib/libboost*
 
 echo "Now installing Boost and compiled libraries"
 cd boost
@@ -55,7 +55,7 @@ echo "Located inside ${TEMP_DIR}/boost/project-config.jam"
 
 read -p "Press enter when done"
 
-sudo ./b2 -j 4 install
+sudo checkinstall ./b2 -j 4 install
 
 echo "Boost and Boost-Python are installed to $INSTALL_DIR"
 
