@@ -14,6 +14,7 @@ from numpy import linalg as LA
 import cv2
 from methods import dist_pts_ellipse, normalize
 
+import pdb
 
 class CircleTracker(object):
     def __init__(self, wait_interval=30, roi_wait_interval=120):
