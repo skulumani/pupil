@@ -5,6 +5,7 @@ channels:
   - anaconda
 dependencies:
   - python
+  - cython
   - numpy
   - scipy
   - ipython
