@@ -51,12 +51,12 @@ fi
 sudo apt-get -y update
 sudo apt-get -y upgrade
 
-sudo apt-get -y install \
+sudo apt-get -y install --reinstall \
     build-essential \
-    cmake \
     pkg-config \
-    libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev \
-    python-dev python-numpy libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev  libdc1394-22-dev
+    libgtk-3-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev \
+    libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev  libdc1394-22-dev \
+    libatlas-base-dev gfortran
 
 # sudo apt-get -y install  libjasper-dev
 
@@ -81,8 +81,8 @@ echo "Make sure Python paths are correct"
 read -p "Press Enter to continue make install"
 
 make -j4
-sudo make install
-# sudo checkinstall install
+# sudo make install
+sudo checkinstall 
 
 echo "Now symlinking OpenCV to anaconda path"
 read -p "Press Enter to continue"
