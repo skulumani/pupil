@@ -97,8 +97,11 @@ python_version = sys.version_info
 boost_lib = 'boost_python'+str(python_version[0])+str(python_version[1])
 
 ## Setup include directories
-my_include_dirs = [".", np.get_include(), 'usr/local/include/eigen3','usr/include/eigen3',
-                   shared_cpp_include_path, singleeyefitter_include_path, opencv_include_dir]
+my_include_dirs = [".", np.get_include(), 
+                   '/usr/local/include/eigen3',
+                   '/usr/include/eigen3',
+                   shared_cpp_include_path, singleeyefitter_include_path, 
+                   opencv_include_dir]
 
 # Choose the base set of compiler and linker flags.
 #
@@ -245,7 +248,8 @@ ext_module_detector_2d = declare_cython_extension("pupil.detectors.detector_2d",
                                                   include_dirs=my_include_dirs)
 
 
-cython_ext_modules = [ext_module_methods,]
+cython_ext_modules = [ext_module_methods,
+                      ext_module_detector_2d]
 my_ext_modules = cythonize(cython_ext_modules, include_path=my_include_dirs, gdb_debug=my_debug)
 
 #########################################################
