@@ -11,7 +11,7 @@ See COPYING and COPYING.LESSER for license details.
 
 import numpy as np
 cimport numpy as np
-
+import methods_python
 
 def cumhist_color_map16(np.ndarray[np.uint16_t, ndim=2] depth_buffer):
     cdef int r, c, i, f, width, height
@@ -44,3 +44,9 @@ def cumhist_color_map16(np.ndarray[np.uint16_t, ndim=2] depth_buffer):
                 rgb_image[r, c, 2] = 20
 
     return rgb_image
+
+def test_imports(a):
+    """Test that this module is working
+    """
+    print("methods.pyx is workign : {}".format(a))
+
