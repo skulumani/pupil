@@ -77,7 +77,22 @@ extra_link_args_nonmath_debug        = []
 openmp_compile_args = ['-fopenmp']
 openmp_link_args    = ['-fopenmp']
 
-my_include_dirs = [".", np.get_include()]
+## Setup dependencies
+dependencies = []
+# include all header files, to recognize changes
+for dirpath, dirnames, filenames in os.walk("singleeyefitter"):
+    for filename in [f for f in filenames if f.endswith(".h")]:
+        dependencies.append( os.path.join(dirpath, filename) )
+
+shared_cpp_include_path = 'shared_cpp/include'
+singleeyefitter_include_path = 'singleeyefitter/'
+
+opencv_libraries = ['opencv_core', 'opencv_highgui', 'opencv_videoio', 'opencv_imgcodecs', 'opencv_imgproc', 'opencv_video']
+opencv_library_dir = '/usr/local/lib'
+opencv_include_dir = '/usr/local/include'
+## Setup include directories
+my_include_dirs = [".", np.get_include(), 'usr/local/include/eigen3','usr/include/eigen3',
+                   shared_cpp_include_path, singleeyefitter_include_path, opencv_include_dir]
 
 # Choose the base set of compiler and linker flags.
 #
@@ -97,6 +112,7 @@ elif build_type == 'debug':
     print( "build configuration selected: debug" )
 else:
     raise ValueError("Unknown build configuration '%s'; valid: 'optimized', 'debug'" % (build_type))
+
 
 def declare_cython_extension(extName, use_math=False, use_openmp=False, include_dirs=None):
     """Declare a Cython extension module for setuptools.
