@@ -49,7 +49,7 @@ cd boost
 ./bootstrap.sh --prefix=${INSTALL_DIR} --with-libraries=all --with-python=$HOME/anaconda3/envs/bin/python
 
 echo "Now you need to add the following line:"
-
+echo "Modify based on current python version"
 echo "using python : 3.7 : /home/shankar/anaconda3/envs/eyetracking : /home/shankar/anaconda3/envs/eyetracking/include/python3.7m ;" 
 echo "Located inside ${TEMP_DIR}/boost/project-config.jam"
 

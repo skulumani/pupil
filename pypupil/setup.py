@@ -93,6 +93,9 @@ opencv_library_dir = '/usr/local/lib'
 opencv_include_dir = '/usr/local/include'
 
 # boost includes
+boost_library_dir = '/usr/local/lib'
+boost_include_dir = '/usr/local/include/boost'
+
 python_version = sys.version_info
 boost_lib = 'boost_python'+str(python_version[0])+str(python_version[1])
 
@@ -101,7 +104,8 @@ my_include_dirs = [".", np.get_include(),
                    '/usr/local/include/eigen3',
                    '/usr/include/eigen3',
                    shared_cpp_include_path, singleeyefitter_include_path, 
-                   opencv_include_dir]
+                   opencv_include_dir, 
+                   boost_include_dir]
 
 # Choose the base set of compiler and linker flags.
 #
@@ -238,10 +242,11 @@ ext_module_methods = declare_cython_extension("pupil.methods",
                                               use_math=True,
                                               use_openmp=False,
                                               include_dirs=my_include_dirs)
+
 ext_module_detector_2d = declare_cython_extension("pupil.detectors.detector_2d",
                                                   sources=['pupil/detectors/detector_2d.pyx', 'pupil/detectors/singleeyefitter/ImageProcessing/cvx.cpp', 'pupil/detectors/singleeyefitter/utils.cpp', 'pupil/detectors/singleeyefitter/detectorUtils.cpp'],
                                                   libraries=['ceres', boost_lib] + opencv_libraries,
-                                                  library_dirs=[opencv_library_dir],
+                                                  library_dirs=[opencv_library_dir, boost_library_dir],
                                                   depends=dependencies,
                                                   use_math=True,
                                                   use_openmp=False,
