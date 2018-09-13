@@ -43,6 +43,7 @@ if sys.version_info < (2,7):
     sys.exit('Sorry, Python < 2.7 is not supported')
 
 import os
+import platform
 
 from setuptools import setup
 from setuptools.extension import Extension
@@ -90,6 +91,11 @@ singleeyefitter_include_path = 'singleeyefitter/'
 opencv_libraries = ['opencv_core', 'opencv_highgui', 'opencv_videoio', 'opencv_imgcodecs', 'opencv_imgproc', 'opencv_video']
 opencv_library_dir = '/usr/local/lib'
 opencv_include_dir = '/usr/local/include'
+
+# boost includes
+python_version = sys.version_info
+boost_lib = 'boost_python'+str(python_version[0])+str(python_version[1])
+
 ## Setup include directories
 my_include_dirs = [".", np.get_include(), 'usr/local/include/eigen3','usr/include/eigen3',
                    shared_cpp_include_path, singleeyefitter_include_path, opencv_include_dir]
@@ -114,13 +120,19 @@ else:
     raise ValueError("Unknown build configuration '%s'; valid: 'optimized', 'debug'" % (build_type))
 
 
-def declare_cython_extension(extName, use_math=False, use_openmp=False, include_dirs=None):
+def declare_cython_extension(extName,sources=None,libraries=None, library_dirs=None, depends=None, use_math=False, use_openmp=False, include_dirs=None):
     """Declare a Cython extension module for setuptools.
 
 Parameters:
     extName : str
         Absolute module name, e.g. use `mylibrary.mypackage.mymodule`
         for the Cython source file `mylibrary/mypackage/mymodule.pyx`.
+    
+    libraries : list of str
+        List of libraries to link against
+
+    library_dirs: list of str
+        List of library directories
 
     use_math : bool
         If True, set math flags and link with ``libm``.
@@ -132,12 +144,14 @@ Return value:
     Extension object
         that can be passed to ``setuptools.setup``.
 """
-    extPath = extName.replace(".", os.path.sep)+".pyx"
+    # extPath = extName.replace(".", os.path.sep)+".pyx"
 
     if use_math:
         compile_args = list(my_extra_compile_args_math) # copy
         link_args    = list(my_extra_link_args_math)
-        libraries    = ["m"]  # link libm; this is a list of library names without the "lib" prefix
+        # libraries    = ["ceres", boost_lib] + opencv_libaries  # this is a list of library names without the "lib" prefix
+        # library_dirs = [opencv_library_dir]
+        # depends = dependencies
     else:
         compile_args = list(my_extra_compile_args_nonmath)
         link_args    = list(my_extra_link_args_nonmath)
@@ -148,9 +162,7 @@ Return value:
         compile_args.insert( 0, openmp_compile_args )
         link_args.insert( 0, openmp_link_args )
     
-    library_dirs = []
     extra_objects = []
-    depends = []
     language = "c++"
 
     # See
@@ -159,7 +171,7 @@ Return value:
     # on linking libraries to your Cython extensions.
     #
     return Extension(name=extName,
-                     sources=[extPath],
+                     sources=sources,
                      extra_compile_args=compile_args,
                      extra_link_args=link_args,
                      include_dirs=include_dirs,
@@ -219,9 +231,12 @@ version = '0.1'
 # declare Cython extension modules here
 
 ext_module_methods = declare_cython_extension("pupil.methods",
-                                              use_math=False,
+                                              sources=['pupil/methods.pyx'],
+                                              use_math=True,
                                               use_openmp=False,
                                               include_dirs=my_include_dirs)
+# ext_module_detector_2d = declare_cython_extension("pupil.detector_2d",
+
 cython_ext_modules = [ext_module_methods,]
 my_ext_modules = cythonize(cython_ext_modules, include_path=my_include_dirs, gdb_debug=my_debug)
 
