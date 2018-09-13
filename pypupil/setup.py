@@ -235,7 +235,15 @@ ext_module_methods = declare_cython_extension("pupil.methods",
                                               use_math=True,
                                               use_openmp=False,
                                               include_dirs=my_include_dirs)
-# ext_module_detector_2d = declare_cython_extension("pupil.detector_2d",
+ext_module_detector_2d = declare_cython_extension("pupil.detectors.detector_2d",
+                                                  sources=['pupil/detectors/detector_2d.pyx', 'pupil/detectors/singleeyefitter/ImageProcessing/cvx.cpp', 'pupil/singleeyefitter/utils.cpp', 'pupil/singleeyefitter/detectorUtils.cpp'],
+                                                  libraries=['ceres', boost_lib] + opencv_libraries,
+                                                  library_dirs=[opencv_library_dir],
+                                                  depends=dependencies,
+                                                  use_math=True,
+                                                  use_openmp=False,
+                                                  include_dirs=my_include_dirs)
+
 
 cython_ext_modules = [ext_module_methods,]
 my_ext_modules = cythonize(cython_ext_modules, include_path=my_include_dirs, gdb_debug=my_debug)
