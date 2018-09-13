@@ -85,8 +85,8 @@ for dirpath, dirnames, filenames in os.walk("singleeyefitter"):
     for filename in [f for f in filenames if f.endswith(".h")]:
         dependencies.append( os.path.join(dirpath, filename) )
 
-shared_cpp_include_path = 'shared_cpp/include'
-singleeyefitter_include_path = 'singleeyefitter/'
+shared_cpp_include_path = 'pupil/shared_cpp/include'
+singleeyefitter_include_path = 'pupil/detectors/singleeyefitter/'
 
 opencv_libraries = ['opencv_core', 'opencv_highgui', 'opencv_videoio', 'opencv_imgcodecs', 'opencv_imgproc', 'opencv_video']
 opencv_library_dir = '/usr/local/lib'
@@ -239,7 +239,7 @@ ext_module_methods = declare_cython_extension("pupil.methods",
                                               use_openmp=False,
                                               include_dirs=my_include_dirs)
 ext_module_detector_2d = declare_cython_extension("pupil.detectors.detector_2d",
-                                                  sources=['pupil/detectors/detector_2d.pyx', 'pupil/detectors/singleeyefitter/ImageProcessing/cvx.cpp', 'pupil/singleeyefitter/utils.cpp', 'pupil/singleeyefitter/detectorUtils.cpp'],
+                                                  sources=['pupil/detectors/detector_2d.pyx', 'pupil/detectors/singleeyefitter/ImageProcessing/cvx.cpp', 'pupil/detectors/singleeyefitter/utils.cpp', 'pupil/detectors/singleeyefitter/detectorUtils.cpp'],
                                                   libraries=['ceres', boost_lib] + opencv_libraries,
                                                   library_dirs=[opencv_library_dir],
                                                   depends=dependencies,
