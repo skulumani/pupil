@@ -254,7 +254,12 @@ ext_module_detector_2d = declare_cython_extension("pupil.detectors.detector_2d",
 
 # detector 3d extension
 ext_module_detector_3d = declare_cython_extension("pupil.detectors.detector_3d",
-                                                  sources=['pupil/detectors/detector_3d.pyx', 'pupil/detectors/singleeyefitter/ImageProcessing/cvx.cpp', 'pupil/detectors/singleeyefitter/utils.cpp', 'pupil/detectors/singleeyefitter/detectorUtils.cpp', 'pupil/detectors/singleeyefitter/EyeModelFitter.cpp', 'pupil/detectors/singleeyefitter/EyeModel.cpp'],
+                                                  sources=['pupil/detectors/detector_3d.pyx',
+                                                           'pupil/detectors/singleeyefitter/ImageProcessing/cvx.cpp',
+                                                           'pupil/detectors/singleeyefitter/utils.cpp',
+                                                           'pupil/detectors/singleeyefitter/detectorUtils.cpp',],
+                                                           # 'pupil/detectors/singleeyefitter/EyeModelFitter.cpp',
+                                                           # 'pupil/detectors/singleeyefitter/EyeModel.cpp'],
                                                   libraries=['ceres', boost_lib] + opencv_libraries,
                                                   library_dirs=[opencv_library_dir, boost_library_dir],
                                                   depends=dependencies,
