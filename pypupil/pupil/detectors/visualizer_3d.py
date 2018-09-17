@@ -9,11 +9,11 @@ See COPYING and COPYING.LESSER for license details.
 ---------------------------------------------------------------------------~(*)
 '''
 
-from visualizer import Visualizer
+from pupil.visualizer import Visualizer
 from OpenGL.GL import *
 from pyglui.cygl import utils as glutils
 from pyglui.cygl.utils import RGBA
-from gl_utils.trackball import Trackball
+from pupil.gl_utils.trackball import Trackball
 import numpy as np
 import math
 
