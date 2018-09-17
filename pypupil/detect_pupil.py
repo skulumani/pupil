@@ -10,9 +10,11 @@ Shankar Kulumani		GWU		skulumani@gwu.edu
 from pupil import circle_detector
 from pupil.detectors import detector_2d
 from pupil import methods_python
+from pupil.video_capture.file_backend import Frame
 
 import cv2
 import numpy as np
+import av
 
 import pdb
 
@@ -44,31 +46,38 @@ def threshold_example():
     found_size = []
     circle_clusters = circle_detector.find_concentric_circles(edge, None, None, found_pos, found_size, first_check=True, min_ellipses_num=2)
 
-def detector_example(filename):
+def detector_example(filename="../../distortion/data/visor/Calibration - Short-Long Blink for Start and Stop.h264"):
     """Try to test out the detector 2d code
     
     Filename should be mp4 video
     """
-        
-    # load an image
-    cap = autoCreateCapture(filename, timebase=None)
-    default_settings = {'frame_size':cap_size, 'frame_rate':30}
-    cap.settings = default_settings
-
-    try:
-        frame = cap.get_frame()
-    except CameraCaptureError:
-        print "Could not retrieve image from capture"
-        cap.close()
-
-    # create  Roi object
-    u_r = methods_python.Roi(frame.shape)
-
-    # instantiate detector object
-    frame = cap.get_frame()
-    detector_cpp = detector_2d.Detector_2D()
-
-    # try to detect
-    results_cpp = detector_cpp.detect(frame, u_r, visualize=False)
+    container = av.open(filename)
     
-    save_object(result_cpp, "/tmp/test_result")
+    detector_cpp = detector_2d.Detector_2D()
+    
+    pupil_center = []
+    # get frames from the video
+    for f in container.decode(video=0):
+        # frame.to_image().save('/tmp/frame_{}.jpg'.format(frame.index))
+
+        # create frame object
+        frame = Frame(f.index, f, f.index)
+        # create  Roi object
+        u_r = methods_python.Roi(frame.img.shape)
+
+        # try to detect
+        results_cpp = detector_cpp.detect(frame, u_r, visualize=True)
+         
+        # extract out the ellipse center, axes, and angle
+        pupil_center.append([results_cpp['ellipse']['center'][0], results_cpp['ellipse']['center'][1]])
+        
+        # visualize
+        cv2.imshow('frame', frame.img)
+        if cv2.waitKey(100) & 0xFF == ord('q'):
+            break
+        # pdb.set_trace()
+        # save_object(result_cpp, "/tmp/test_result")
+    
+    pupil_center = np.array(pupil_center)
+    return pupil_center 
+    # try to plot the center onto the image
