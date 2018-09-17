@@ -252,6 +252,8 @@ ext_module_detector_2d = declare_cython_extension("pupil.detectors.detector_2d",
                                                   use_openmp=False,
                                                   include_dirs=my_include_dirs)
 
+# detector 3d extension
+
 
 cython_ext_modules = [ext_module_methods,
                       ext_module_detector_2d]
