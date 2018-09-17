@@ -276,7 +276,7 @@ cython_ext_modules = [ext_module_methods,
                       ext_module_detector_2d,
                       ext_module_detector_3d]
 
-my_ext_modules = cythonize(cython_ext_modules, include_path=my_include_dirs, gdb_debug=my_debug)
+my_ext_modules = cythonize(cython_ext_modules, include_path=my_include_dirs, gdb_debug=my_debug, quiet=False)
 
 #########################################################
 # Call setup()
