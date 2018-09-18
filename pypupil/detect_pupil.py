@@ -113,8 +113,8 @@ def detector3d_example(filename="../../distortion/data/visor/Calibration - Short
 
     container = av.open(filename)
     
-    detector_cpp_3 = detector_3d.Detector_3D()
-    detector_cpp = detector_2d.Detector_2D()
+    detector3d = detector_3d.Detector_3D()
+    detector2d = detector_2d.Detector_2D()
 
     # ouput video to save for visualization
     fourcc = cv2.VideoWriter_fourcc('X', '2', '6', '4')
@@ -129,6 +129,7 @@ def detector3d_example(filename="../../distortion/data/visor/Calibration - Short
     pupil_norm_pos = []
 
     # get frames from the video
+    pdb.set_trace()
     for f in container.decode(video=0):
         # frame.to_image().save('/tmp/frame_{}.jpg'.format(frame.index))
 
@@ -138,9 +139,8 @@ def detector3d_example(filename="../../distortion/data/visor/Calibration - Short
         u_r = methods_python.Roi(frame.img.shape)
 
         # try to detect
-        results_2d = detector_cpp.detect(frame, u_r, visualize=True)
-        # results_3d = detector_cpp.detect(frame, u_r, visualize=True)
-         
+        # results_2d = detector2d.detect(frame, u_r, visualize=False)
+        results_3d = detector3d.detect(frame, u_r, visualize=False)
         # # extract out the ellipse center, axes, and angle
         # pupil_center.append([results_cpp['ellipse']['center'][0], results_cpp['ellipse']['center'][1]])
         # pupil_axes.append([results_cpp['ellipse']['axes'][0], results_cpp['ellipse']['axes'][1]])
