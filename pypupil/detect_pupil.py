@@ -129,7 +129,6 @@ def detector3d_example(filename="../../distortion/data/visor/Calibration - Short
     pupil_norm_pos = []
 
     # get frames from the video
-    pdb.set_trace()
     for f in container.decode(video=0):
         # frame.to_image().save('/tmp/frame_{}.jpg'.format(frame.index))
 

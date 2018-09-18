@@ -17,6 +17,7 @@
 #include <Eigen/StdVector>
 #include <algorithm>
 #include <queue>
+#include <iostream>
 
 namespace singleeyefitter {
 
@@ -107,6 +108,7 @@ Detector3DResult EyeModelFitter::updateAndDetect(std::shared_ptr<Detector2DResul
     auto observation3DPtr = std::make_shared<const Observation>(observation2D, mFocalLength);
     bool do3DSearch = false;
     // 2d observation good enough to show to models?
+    std::cout << "2D Confidence: " << observation2D->confidence << std::endl;
     if (observation2D->confidence >= 0.7) {
 
         // allow each model to decide by themself if the new observation supports the model or not
