@@ -61,7 +61,7 @@ except ImportError:
 
 # Modules involving numerical computations
 #
-extra_compile_args_math_optimized    = ['-march=native', '-O2', '-msse', '-msse2', '-mfma', '-mfpmath=sse', '-D_USE_MATH_DEFINES', '-std=c++11', '-w']
+extra_compile_args_math_optimized    = ['-march=native', '-O2', '-msse', '-msse2', '-mfma', '-mfpmath=sse', '-D_USE_MATH_DEFINES', '-std=c++11', '-w', '-lglog']
 extra_compile_args_math_debug        = ['-march=native', '-O0', '-g', '-D_USE_MATH_DEFINES']
 extra_link_args_math_optimized       = []
 extra_link_args_math_debug           = []
@@ -96,6 +96,9 @@ opencv_include_dir = '/usr/local/include'
 boost_library_dir = '/usr/local/lib'
 boost_include_dir = '/usr/local/include/boost'
 
+glog_library_dir = '/usr/local/lib'
+glog_include_dir = '/usr/local/include'
+
 python_version = sys.version_info
 boost_lib = 'boost_python'+str(python_version[0])+str(python_version[1])
 
@@ -106,7 +109,8 @@ my_include_dirs = [".", np.get_include(),
                    shared_cpp_include_path,
                    singleeyefitter_include_path, 
                    opencv_include_dir, 
-                   boost_include_dir]
+                   boost_include_dir,
+                   glog_include_dir]
 
 # Choose the base set of compiler and linker flags.
 #
@@ -264,8 +268,8 @@ ext_module_detector_3d = declare_cython_extension("pupil.detectors.detector_3d",
                                                            'pupil/detectors/singleeyefitter/detectorUtils.cpp',
                                                            'pupil/detectors/singleeyefitter/EyeModelFitter.cpp',
                                                            'pupil/detectors/singleeyefitter/EyeModel.cpp'],
-                                                  libraries=['ceres', boost_lib] + opencv_libraries,
-                                                  library_dirs=[opencv_library_dir, boost_library_dir],
+                                                  libraries=['ceres', boost_lib, 'glog'] + opencv_libraries,
+                                                  library_dirs=[opencv_library_dir, boost_library_dir, glog_library_dir],
                                                   depends=dependencies,
                                                   use_math=True,
                                                   use_openmp=False,
