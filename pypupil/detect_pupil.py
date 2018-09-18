@@ -105,3 +105,9 @@ def detector2d_example(filename="../../distortion/data/visor/Calibration - Short
 
     return pupil_center 
     # try to plot the center onto the image
+
+def detector3d_example():
+    """Try out the detector 3d
+    """
+
+    from pupil.detectors import detector_3d
