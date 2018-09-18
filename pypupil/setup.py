@@ -99,6 +99,9 @@ boost_include_dir = '/usr/local/include/boost'
 glog_library_dir = '/usr/local/lib'
 glog_include_dir = '/usr/local/include/glog'
 
+ceres_library_dir = '/usr/local/lib'
+ceres_include_dir = '/usr/local/include/ceres'
+
 python_version = sys.version_info
 boost_lib = 'boost_python'+str(python_version[0])+str(python_version[1])
 
@@ -110,7 +113,8 @@ my_include_dirs = [".", np.get_include(),
                    singleeyefitter_include_path, 
                    opencv_include_dir, 
                    boost_include_dir,
-                   glog_include_dir]
+                   glog_include_dir,
+                   ceres_include_dir]
 
 # Choose the base set of compiler and linker flags.
 #
