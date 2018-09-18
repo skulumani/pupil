@@ -61,7 +61,7 @@ except ImportError:
 
 # Modules involving numerical computations
 #
-extra_compile_args_math_optimized    = ['-march=native', '-O2', '-msse', '-msse2', '-mfma', '-mfpmath=sse', '-D_USE_MATH_DEFINES', '-std=c++11', '-w', '-lglog']
+extra_compile_args_math_optimized    = ['-march=native', '-O2', '-msse', '-msse2', '-mfma', '-mfpmath=sse', '-D_USE_MATH_DEFINES', '-std=c++11', '-w', '-DNDEBUG']
 extra_compile_args_math_debug        = ['-march=native', '-O0', '-g', '-D_USE_MATH_DEFINES']
 extra_link_args_math_optimized       = []
 extra_link_args_math_debug           = []
@@ -97,7 +97,7 @@ boost_library_dir = '/usr/local/lib'
 boost_include_dir = '/usr/local/include/boost'
 
 glog_library_dir = '/usr/local/lib'
-glog_include_dir = '/usr/local/include'
+glog_include_dir = '/usr/local/include/glog'
 
 python_version = sys.version_info
 boost_lib = 'boost_python'+str(python_version[0])+str(python_version[1])
