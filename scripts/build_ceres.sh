@@ -23,7 +23,8 @@ trap cleanup EXIT
 # Eigen, Cmake, glog, gflags, SuiteSparse, CXSparse, ATLAS (For BLAS AND LAPACK), TBB
 echo "Get Ceres dependencies"
 read -p "Press ENTER to install apt deps"
-sudo apt-get install -y libgoogle-glog-dev libatlas-base-dev libtbb-dev libsuitesparse-dev checkinstall
+sudo apt-get install -y  libatlas-base-dev libtbb-dev  checkinstall
+# sudo apt-get install -y libgoogle-glog-dev libsuitesparse-dev
 
 # - However, if you want to build Ceres as a *shared* library, you must
 # #   add the following PPA:
