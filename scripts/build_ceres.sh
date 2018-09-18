@@ -41,7 +41,8 @@ tar -xvzf ${CERES_VER}.tar.gz -C ./ceres --strip-components=1
 cd ceres
 mkdir build
 cd build
-cmake ..
+cmake \
+    -D BUILD_SHARED_LIBS=ON ..
 make -j4
 make test
 
