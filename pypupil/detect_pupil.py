@@ -206,15 +206,44 @@ def detector2d_example(video_filename="../../distortion/data/visor/Calibration -
     return pupil_confidence
     # try to plot the center onto the image
 
-def detector3d_example(filename="../../distortion/data/visor/Calibration - Short-Long Blink for Start and Stop.h264"):
+def detector3d_example(video_filename="../../distortion/data/visor/Calibration - Short-Long Blink for Start and Stop.h264",
+                       combined_map_filename='../../distortion/data/combined_map_interpolation.xml'):
     """Try out the detector 3d
     """
 
-    container = av.open(filename)
+    cv2.namedWindow("Frames")
+    # create some trackbars for the settings
+    cv2.createTrackbar('Pupil Size Min', 'Frames', 10, 100, nothing)
+    cv2.createTrackbar('Pupil Size Max', 'Frames', 150, 250, nothing)
+    cv2.createTrackbar('Intesity Range', 'Frames', 23, 70, nothing)
+    cv2.createTrackbar('ROI Lower X', 'Frames', 100, 400, nothing)
+    cv2.createTrackbar('ROI Upper X', 'Frames', 640, 640, nothing)
+    cv2.createTrackbar('ROI Lower Y', 'Frames', 100, 400, nothing)
+    cv2.createTrackbar('ROI Upper Y', 'Frames', 480, 480, nothing)
     
-    detector3d = detector_3d.Detector_3D()
-    detector2d = detector_2d.Detector_2D()
+    cv2.createTrackbar('Canny Threshold', 'Frames', 160, 200, nothing)
+    cv2.createTrackbar('Canny Ratio', 'Frames', 2, 10, nothing)
 
+    container = av.open(video_filename)
+   
+    # get the distortion map
+    map_x, map_y = load_distortion_map(combined_map_filename)
+
+    # create  Roi object
+    u_r = methods_python.Roi((480, 640))
+    # set region of interest
+    roi_lower_x = 100
+    roi_upper_x = 640
+    roi_lower_y = 100
+    roi_upper_y = 480
+    u_r.set((roi_lower_x, roi_lower_y, roi_upper_x, roi_upper_y))
+
+    settings = define_detector_settings()
+    settings['2D_Settings'] = settings
+    settings['3D_Settings'] = {'model_sensitivity': 0.997}
+
+    detector_cpp = detector_3d.Detector_3D(settings=settings)
+    
     # ouput video to save for visualization
     fourcc = cv2.VideoWriter_fourcc('X', '2', '6', '4')
     output_video = cv2.VideoWriter('/tmp/detector3d_output.mp4', fourcc, 25, (640, 480))
@@ -228,17 +257,34 @@ def detector3d_example(filename="../../distortion/data/visor/Calibration - Short
     pupil_norm_pos = []
 
     # get frames from the video
-    for f in container.decode(video=0):
+    for f in itertools.cycle(container.decode(video=0)):
         # frame.to_image().save('/tmp/frame_{}.jpg'.format(frame.index))
 
         # create frame object
         frame = Frame(f.index, f, f.index)
-        # create  Roi object
-        u_r = methods_python.Roi(frame.img.shape)
+        # remap the image using the distortion map
+        # frame.remap(map_x, map_y)
+
+        # update settings
+        settings['pupil_size_min'] = cv2.getTrackbarPos('Pupil Size Min', 'Frames')
+        settings['pupil_size_max'] = cv2.getTrackbarPos('Pupil Size Max', 'Frames')
+        settings['intesity_range'] = cv2.getTrackbarPos('Intensity Range', 'Frames')
+        settings['canny_treshold'] = cv2.getTrackbarPos('Canny Threshold', 'Frames')
+        settings['canny_ration'] = cv2.getTrackbarPos('Canny Ratio', 'Frames')
+        
+        settings['2D_Settings'] = settings
+        # detector_cpp.update_settings(settings)
+        
+        # update the region of interest
+        roi_lower_x = cv2.getTrackbarPos('ROI Lower X', 'Frames')
+        roi_upper_x = cv2.getTrackbarPos('ROI Upper X', 'Frames')
+        roi_lower_y = cv2.getTrackbarPos('ROI Lower Y', 'Frames')
+        roi_upper_y = cv2.getTrackbarPos('ROI Upper Y', 'Frames')
+        u_r.set((roi_lower_x, roi_lower_y, roi_upper_x, roi_upper_y))
 
         # try to detect
-        # results_2d = detector2d.detect(frame, u_r, visualize=False)
-        results_3d = detector3d.detect(frame, u_r, visualize=False)
+        results_cpp = detector_cpp.detect(frame, u_r, visualize=True)
+         
         # # extract out the ellipse center, axes, and angle
         # pupil_center.append([results_cpp['ellipse']['center'][0], results_cpp['ellipse']['center'][1]])
         # pupil_axes.append([results_cpp['ellipse']['axes'][0], results_cpp['ellipse']['axes'][1]])
@@ -249,15 +295,22 @@ def detector3d_example(filename="../../distortion/data/visor/Calibration - Short
         # pupil_norm_pos.append([results_cpp['norm_pos'][0], results_cpp['norm_pos'][1]])
 
         output_video.write(frame.img)
+        
+        # augment the image with a frame number somewhere
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        cv2.putText(frame.img,'{}'.format(frame.timestamp),(frame.width//2, frame.height - 2), font, 1,(0, 0, 255),2,cv2.LINE_AA)
+        
+        # draw the region of interest rectangle
+        cv2.rectangle(frame.img, (roi_lower_x, roi_lower_y), (roi_upper_x, roi_upper_y), (0,0, 255))
 
         # visualize
-        cv2.imshow('frame', frame.img)
-        if cv2.waitKey(10) & 0xFF == ord('q'):
+        cv2.imshow("Frames", frame.img)
+        k = cv2.waitKey(0) & 0xFF
+        if k == ord('q') or k == ord('Q') or k == 27:
+            cv2.destroyAllWindows()
             break
-        
-        # print(results_cpp['confidence'])
+
     
-    return 0
     # pupil_center = np.array(pupil_center)
     # pupil_axes = np.array(pupil_axes)
     # pupil_angle = np.array(pupil_angle)
@@ -266,13 +319,13 @@ def detector3d_example(filename="../../distortion/data/visor/Calibration - Short
     # pupil_diamter = np.array(pupil_diameter)
     # pupil_norm_pos = np.array(pupil_norm_pos)
 
-    # return pupil_center 
-    # try to plot the center onto the image
+    return 0
 
 if __name__ == "__main__":
     video_filename = '/tmp/Calibration - Short-Long Blink for Start and Stop.h264'
     combined_map_filename = '/tmp/combined_map_interpolation.xml'
 
-    detector2d_example(video_filename=video_filename,
-                       combined_map_filename=combined_map_filename)
-    # detector3d_example()
+    # detector2d_example(video_filename=video_filename,
+    #                  combined_map_filename=combined_map_filename)
+    detector3d_example(video_filename=video_filename,
+                     combined_map_filename=combined_map_filename)
