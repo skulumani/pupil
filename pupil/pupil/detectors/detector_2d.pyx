@@ -101,8 +101,8 @@ cdef class Detector_2D:
       Parameters
       ----------
       settings : dict
-         Dictionary of settings values which are then later used by the detect
-         method in this class which also calls the detect function inside detect_2d.hpp
+      Dictionary of settings values which are then later used by the detect
+      method in this class which also calls the detect function inside detect_2d.hpp
 
       Author
       ------

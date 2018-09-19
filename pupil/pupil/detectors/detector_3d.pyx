@@ -1,3 +1,4 @@
+# vim: expandtab tabstop=3 softtabstop=3 shiftwidth=3
 '''
 (*)~---------------------------------------------------------------------------
 Pupil - eye tracking platform
@@ -103,22 +104,22 @@ cdef class Detector_3D:
         return {'2D_Settings': self.detectProperties2D , '3D_Settings' : self.detectProperties3D }
 
     def update_settings(self, settings):
-      r"""Update settings for class
+        r"""Update settings for class
 
-      This will update the settings for the class given the proper input 
-      dictionary
+        This will update the settings for the class given the proper input 
+        dictionary
 
-      Parameters
-      ----------
-      settings : dict
-         Dictionary of settings values which are then later used by the detect
-         method in this class which also calls the detect function inside detect_2d.hpp
+        Parameters
+        ----------
+        settings : dict
+            Dictionary of settings values which are then later used by the detect
+            method in this class which also calls the detect function inside detect_2d.hpp
 
-      Author
-      ------
-      Shankar Kulumani		RCCT		shankar.kulumani@rockwellcollins.com
+        Author
+        ------
+        Shankar Kulumani		RCCT		shankar.kulumani@rockwellcollins.com
 
-      """
+        """
         self.detectProperties2D = settings['2D_Settings']
         self.detectProperties3D = settings['3D_Settings']
 
