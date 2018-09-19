@@ -91,10 +91,10 @@ cdef class Detector_2D:
    def get_settings(self):
        return self.detectProperties
 
-    def update_settings(self, settings):
-        """This will update the member detectProperties dictionary
-        """
-        self.detectProperties = settings
+   def update_settings(self, settings):
+      """This will update the member detectProperties dictionary
+      """
+      self.detectProperties = settings
 
    def on_resolution_change(self, old_size, new_size):
        self.detectProperties["pupil_size_max"] *= new_size[0] / old_size[0]

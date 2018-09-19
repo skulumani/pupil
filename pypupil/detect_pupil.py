@@ -120,6 +120,8 @@ def detector2d_example(filename="../../distortion/data/visor/Calibration - Short
         u_r = methods_python.Roi(frame.img.shape)
         
         # update settings
+        settings['pupil_size_min'] = cv2.getTrackbarPos('Pupil Size Min', 'Frames')
+        detector_cpp.update_settings(settings)
 
         # try to detect
         results_cpp = detector_cpp.detect(frame, u_r, visualize=True)
@@ -223,5 +225,5 @@ def detector3d_example(filename="../../distortion/data/visor/Calibration - Short
     # try to plot the center onto the image
 
 if __name__ == "__main__":
-    # detector2d_example()
-    detector3d_example()
+    detector2d_example()
+    # detector3d_example()
