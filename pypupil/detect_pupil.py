@@ -104,6 +104,8 @@ def detector2d_example(video_filename="../../distortion/data/visor/Calibration -
     cv2.createTrackbar('Pupil Size Min', 'Frames', 10, 100, nothing)
     cv2.createTrackbar('Pupil Size Max', 'Frames', 150, 250, nothing)
     cv2.createTrackbar('Intesity Range', 'Frames', 23, 70, nothing)
+    cv2.createTrackbar('ROI Lower X', 'Frames', 100, 400, nothing)
+    cv2.createTrackbar('ROI Upper X', 'Frames', 640, 640, nothing)
 
     container = av.open(video_filename)
    
@@ -113,7 +115,11 @@ def detector2d_example(video_filename="../../distortion/data/visor/Calibration -
     # create  Roi object
     u_r = methods_python.Roi((480, 640))
     # set region of interest
-    u_r.set((100, 100, 640, 480))
+    roi_lower_x = 100
+    roi_upper_x = 640
+    roi_lower_y = 100
+    roi_upper_y = 480
+    u_r.set((roi_lower_x, roi_lower_y, roi_upper_x, roi_upper_y))
 
     settings = define_detector_settings()
     detector_cpp = detector_2d.Detector_2D(settings=settings)
@@ -134,13 +140,10 @@ def detector2d_example(video_filename="../../distortion/data/visor/Calibration -
     for f in itertools.cycle(container.decode(video=0)):
         # frame.to_image().save('/tmp/frame_{}.jpg'.format(frame.index))
 
-
         # create frame object
         frame = Frame(f.index, f, f.index)
         # remap the image using the distortion map
         frame.remap(map_x, map_y)
-
-        
 
         # update settings
         settings['pupil_size_min'] = cv2.getTrackbarPos('Pupil Size Min', 'Frames')
@@ -148,6 +151,11 @@ def detector2d_example(video_filename="../../distortion/data/visor/Calibration -
         settings['intesity_range'] = cv2.getTrackbarPos('Intensity Range', 'Frames')
         detector_cpp.update_settings(settings)
         
+        # update the region of interest
+        roi_lower_x = cv2.getTrackbarPos('ROI Lower X', 'Frames')
+        roi_upper_x = cv2.getTrackbarPos('ROI Upper X', 'Frames')
+        u_r.set((roi_lower_x, roi_lower_y, roi_upper_x, roi_upper_y))
+
         # try to detect
         results_cpp = detector_cpp.detect(frame, u_r, visualize=True)
          
@@ -163,9 +171,11 @@ def detector2d_example(video_filename="../../distortion/data/visor/Calibration -
         output_video.write(frame.img)
         
         # augment the image with a frame number somewhere
-        # ipdb.set_trace()
         font = cv2.FONT_HERSHEY_SIMPLEX
         cv2.putText(frame.img,'{}'.format(frame.timestamp),(frame.width//2, frame.height - 2), font, 1,(0, 0, 255),2,cv2.LINE_AA)
+        
+        # draw the region of interest rectangle
+        cv2.rectangle(frame.img, (roi_lower_x, roi_lower_y), (roi_upper_x, roi_upper_y), (0,0, 255))
 
         # visualize
         cv2.imshow("Frames", frame.img)
