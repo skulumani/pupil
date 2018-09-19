@@ -108,6 +108,9 @@ def detector2d_example(video_filename="../../distortion/data/visor/Calibration -
     cv2.createTrackbar('ROI Upper X', 'Frames', 640, 640, nothing)
     cv2.createTrackbar('ROI Lower Y', 'Frames', 100, 400, nothing)
     cv2.createTrackbar('ROI Upper Y', 'Frames', 480, 480, nothing)
+    
+    cv2.createTrackbar('Canny Threshold', 'Frames', 160, 200, nothing)
+    cv2.createTrackbar('Canny Ratio', 'Frames', 2, 10, nothing)
 
     container = av.open(video_filename)
    
@@ -151,6 +154,9 @@ def detector2d_example(video_filename="../../distortion/data/visor/Calibration -
         settings['pupil_size_min'] = cv2.getTrackbarPos('Pupil Size Min', 'Frames')
         settings['pupil_size_max'] = cv2.getTrackbarPos('Pupil Size Max', 'Frames')
         settings['intesity_range'] = cv2.getTrackbarPos('Intensity Range', 'Frames')
+        settings['canny_treshold'] = cv2.getTrackbarPos('Canny Threshold', 'Frames')
+        settings['canny_ration'] = cv2.getTrackbarPos('Canny Ratio', 'Frames')
+
         detector_cpp.update_settings(settings)
         
         # update the region of interest
