@@ -106,6 +106,8 @@ def detector2d_example(video_filename="../../distortion/data/visor/Calibration -
     cv2.createTrackbar('Intesity Range', 'Frames', 23, 70, nothing)
     cv2.createTrackbar('ROI Lower X', 'Frames', 100, 400, nothing)
     cv2.createTrackbar('ROI Upper X', 'Frames', 640, 640, nothing)
+    cv2.createTrackbar('ROI Lower Y', 'Frames', 100, 400, nothing)
+    cv2.createTrackbar('ROI Upper Y', 'Frames', 480, 480, nothing)
 
     container = av.open(video_filename)
    
@@ -154,6 +156,8 @@ def detector2d_example(video_filename="../../distortion/data/visor/Calibration -
         # update the region of interest
         roi_lower_x = cv2.getTrackbarPos('ROI Lower X', 'Frames')
         roi_upper_x = cv2.getTrackbarPos('ROI Upper X', 'Frames')
+        roi_lower_y = cv2.getTrackbarPos('ROI Lower Y', 'Frames')
+        roi_upper_y = cv2.getTrackbarPos('ROI Upper Y', 'Frames')
         u_r.set((roi_lower_x, roi_lower_y, roi_upper_x, roi_upper_y))
 
         # try to detect
