@@ -17,7 +17,12 @@ import cv2
 import numpy as np
 import av
 
-import pdb
+import itertools
+from IPython.core.debugger import Pdb
+ipdb = Pdb()
+
+def nothing(x):
+    pass
 
 def threshold_example():
     # read the image and convert to grayscale
@@ -47,14 +52,51 @@ def threshold_example():
     found_size = []
     circle_clusters = circle_detector.find_concentric_circles(edge, None, None, found_pos, found_size, first_check=True, min_ellipses_num=2)
 
+def define_detector_settings():
+    """This creates a dictionary to input into Detector_2D that defines some 
+    of the settings used for the pupil detection. 
+
+    This dictionary might also be the same that is given to Detector_3D
+    """
+    settings = {}
+    settings['coarse_detection'] = True
+    settings['coarse_filter_min'] = 128
+    settings['coarse_filter_max'] = 280
+    settings['intensity_range'] = 23
+    settings['blur_size'] = 5
+    settings['canny_treshold'] = 160
+    settings['canny_ration'] = 2
+    settings['canny_aperture'] = 5
+    settings['pupil_size_max'] = 150
+    settings['pupil_size_min'] = 10
+    settings['strong_perimeter_ratio_range_min'] = 0.6
+    settings['strong_perimeter_ratio_range_max'] = 1.1
+    settings['strong_area_ratio_range_min'] = 0.8
+    settings['strong_area_ratio_range_max'] = 1.1
+    settings['contour_size_min'] = 5
+    settings['ellipse_roundness_ratio'] = 0.09
+    settings['initial_ellipse_fit_treshhold'] = 4.3
+    settings['final_perimeter_ratio_range_min'] = 0.5
+    settings['final_perimeter_ratio_range_max'] = 1.0
+    settings['ellipse_true_support_min_dist'] = 3.0
+    settings['support_pixel_ratio_exponent'] = 2.0
+
+    return settings
+
 def detector2d_example(filename="../../distortion/data/visor/Calibration - Short-Long Blink for Start and Stop.h264"):
     """Try to test out the detector 2d code
     
     Filename should be mp4 video
     """
+
+    cv2.namedWindow("Frames")
+    # create some trackbars for the settings
+    cv2.createTrackbar('Pupil Size Min', 'Frames', 10, 100, nothing)
+
     container = av.open(filename)
     
-    detector_cpp = detector_2d.Detector_2D()
+    settings = define_detector_settings()
+    detector_cpp = detector_2d.Detector_2D(settings=settings)
     
     # ouput video to save for visualization
     fourcc = cv2.VideoWriter_fourcc('X', '2', '6', '4')
@@ -69,13 +111,15 @@ def detector2d_example(filename="../../distortion/data/visor/Calibration - Short
     pupil_norm_pos = []
 
     # get frames from the video
-    for f in container.decode(video=0):
+    for f in itertools.cycle(container.decode(video=0)):
         # frame.to_image().save('/tmp/frame_{}.jpg'.format(frame.index))
 
         # create frame object
         frame = Frame(f.index, f, f.index)
         # create  Roi object
         u_r = methods_python.Roi(frame.img.shape)
+        
+        # update settings
 
         # try to detect
         results_cpp = detector_cpp.detect(frame, u_r, visualize=True)
@@ -90,11 +134,19 @@ def detector2d_example(filename="../../distortion/data/visor/Calibration - Short
         pupil_norm_pos.append([results_cpp['norm_pos'][0], results_cpp['norm_pos'][1]])
 
         output_video.write(frame.img)
+        
+        # augment the image with a frame number somewhere
+        # ipdb.set_trace()
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        cv2.putText(frame.img,'{}'.format(frame.timestamp),(frame.width//2, frame.height - 2), font, 1,(0, 0, 255),2,cv2.LINE_AA)
 
         # visualize
-        cv2.imshow('frame', frame.img)
-        if cv2.waitKey(10) & 0xFF == ord('q'):
+        cv2.imshow("Frames", frame.img)
+        k = cv2.waitKey(0) & 0xFF
+        if k == ord('q') or k == ord('Q') or k == 27:
+            cv2.destroyAllWindows()
             break
+
     
     pupil_center = np.array(pupil_center)
     pupil_axes = np.array(pupil_axes)
