@@ -8,6 +8,7 @@ Lesser General Public License (LGPL v3.0).
 See COPYING and COPYING.LESSER for license details.
 ---------------------------------------------------------------------------~(*)
 '''
+import cv2
 
 import os
 import av
@@ -70,8 +71,17 @@ class Frame(object):
                 self._gray = self._gray.reshape(-1, plane.line_size)
                 self._gray = np.ascontiguousarray(self._gray[:, :self.width])
         return self._gray
+    
+    def remap(self, map_x, map_y):
+        # get the image converted to numpy
+        img = self._av_frame.to_nd_array(format='bgr24')
+        # remap 
+        dst_img = cv2.remap(img, map_x, map_y, interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_TRANSPARENT) 
 
-
+        # update _img, _gray
+        self._img = dst_img
+        self._gray = cv2.cvtColor(dst_img, cv2.COLOR_BGR2GRAY)
+        
 class File_Source(Playback_Source, Base_Source):
     """Simple file capture.
 

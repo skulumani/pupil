@@ -92,7 +92,8 @@ def define_detector_settings():
 
     return settings
 
-def detector2d_example(filename="../../distortion/data/visor/Calibration - Short-Long Blink for Start and Stop.h264"):
+def detector2d_example(video_filename="../../distortion/data/visor/Calibration - Short-Long Blink for Start and Stop.h264",
+                       combined_map_filename='../../distortion/data/combined_map_interpolation.xml'):
     """Try to test out the detector 2d code
     
     Filename should be mp4 video
@@ -104,8 +105,16 @@ def detector2d_example(filename="../../distortion/data/visor/Calibration - Short
     cv2.createTrackbar('Pupil Size Max', 'Frames', 150, 250, nothing)
     cv2.createTrackbar('Intesity Range', 'Frames', 23, 70, nothing)
 
-    container = av.open(filename)
-    
+    container = av.open(video_filename)
+   
+    # get the distortion map
+    map_x, map_y = load_distortion_map(combined_map_filename)
+
+    # create  Roi object
+    u_r = methods_python.Roi((480, 640))
+    # set region of interest
+    u_r.set((100, 100, 640, 480))
+
     settings = define_detector_settings()
     detector_cpp = detector_2d.Detector_2D(settings=settings)
     
@@ -125,18 +134,20 @@ def detector2d_example(filename="../../distortion/data/visor/Calibration - Short
     for f in itertools.cycle(container.decode(video=0)):
         # frame.to_image().save('/tmp/frame_{}.jpg'.format(frame.index))
 
+
         # create frame object
         frame = Frame(f.index, f, f.index)
-        # create  Roi object
-        u_r = methods_python.Roi(frame.img.shape)
+        # remap the image using the distortion map
+        frame.remap(map_x, map_y)
+
         
+
         # update settings
         settings['pupil_size_min'] = cv2.getTrackbarPos('Pupil Size Min', 'Frames')
         settings['pupil_size_max'] = cv2.getTrackbarPos('Pupil Size Max', 'Frames')
         settings['intesity_range'] = cv2.getTrackbarPos('Intensity Range', 'Frames')
-
         detector_cpp.update_settings(settings)
-
+        
         # try to detect
         results_cpp = detector_cpp.detect(frame, u_r, visualize=True)
          
@@ -239,5 +250,9 @@ def detector3d_example(filename="../../distortion/data/visor/Calibration - Short
     # try to plot the center onto the image
 
 if __name__ == "__main__":
-    detector2d_example()
+    video_filename = '/tmp/Calibration - Short-Long Blink for Start and Stop.h264'
+    combined_map_filename = '/tmp/combined_map_interpolation.xml'
+
+    detector2d_example(video_filename=video_filename,
+                       combined_map_filename=combined_map_filename)
     # detector3d_example()
