@@ -92,6 +92,8 @@ def detector2d_example(filename="../../distortion/data/visor/Calibration - Short
     cv2.namedWindow("Frames")
     # create some trackbars for the settings
     cv2.createTrackbar('Pupil Size Min', 'Frames', 10, 100, nothing)
+    cv2.createTrackbar('Pupil Size Max', 'Frames', 150, 250, nothing)
+    cv2.createTrackbar('Intesity Range', 'Frames', 23, 70, nothing)
 
     container = av.open(filename)
     
@@ -121,6 +123,9 @@ def detector2d_example(filename="../../distortion/data/visor/Calibration - Short
         
         # update settings
         settings['pupil_size_min'] = cv2.getTrackbarPos('Pupil Size Min', 'Frames')
+        settings['pupil_size_max'] = cv2.getTrackbarPos('Pupil Size Max', 'Frames')
+        settings['intesity_range'] = cv2.getTrackbarPos('Intensity Range', 'Frames')
+
         detector_cpp.update_settings(settings)
 
         # try to detect
