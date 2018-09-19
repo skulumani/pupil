@@ -93,7 +93,21 @@ cdef class Detector_2D:
        return self.detectProperties
 
    def update_settings(self, settings):
-      """This will update the member detectProperties dictionary
+      r"""Update settings for class
+
+      This will update the settings for the class given the proper input 
+      dictionary
+
+      Parameters
+      ----------
+      settings : dict
+         Dictionary of settings values which are then later used by the detect
+         method in this class which also calls the detect function inside detect_2d.hpp
+
+      Author
+      ------
+      Shankar Kulumani		RCCT		shankar.kulumani@rockwellcollins.com
+
       """
       self.detectProperties = settings
 

@@ -94,11 +94,22 @@ def define_detector_settings():
 
 def detector2d_example(video_filename="../../distortion/data/visor/Calibration - Short-Long Blink for Start and Stop.h264",
                        combined_map_filename='../../distortion/data/combined_map_interpolation.xml'):
-    """Try to test out the detector 2d code
-    
-    Filename should be mp4 video
-    """
+    r"""Test out standalone detector 2d
 
+    Run the Cython/C++ code in detector_2d class
+
+    Parameters
+    ----------
+    video_filename : str
+        Video to read 
+    combined_map_filename : str
+        Path to combined distortion correction map
+
+    Author
+    ------
+    Shankar Kulumani		RCCT		shankar.kulumani@rockwellcollins.com
+
+    """
     cv2.namedWindow("Frames")
     # create some trackbars for the settings
     cv2.createTrackbar('Pupil Size Min', 'Frames', 10, 100, nothing)
@@ -325,7 +336,7 @@ if __name__ == "__main__":
     video_filename = '/tmp/Calibration - Short-Long Blink for Start and Stop.h264'
     combined_map_filename = '/tmp/combined_map_interpolation.xml'
 
-    # detector2d_example(video_filename=video_filename,
-    #                  combined_map_filename=combined_map_filename)
-    detector3d_example(video_filename=video_filename,
+    detector2d_example(video_filename=video_filename,
                      combined_map_filename=combined_map_filename)
+    # detector3d_example(video_filename=video_filename,
+    #                  combined_map_filename=combined_map_filename)

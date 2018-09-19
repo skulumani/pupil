@@ -102,6 +102,26 @@ cdef class Detector_3D:
     def get_settings(self):
         return {'2D_Settings': self.detectProperties2D , '3D_Settings' : self.detectProperties3D }
 
+    def update_settings(self, settings):
+      r"""Update settings for class
+
+      This will update the settings for the class given the proper input 
+      dictionary
+
+      Parameters
+      ----------
+      settings : dict
+         Dictionary of settings values which are then later used by the detect
+         method in this class which also calls the detect function inside detect_2d.hpp
+
+      Author
+      ------
+      Shankar Kulumani		RCCT		shankar.kulumani@rockwellcollins.com
+
+      """
+        self.detectProperties2D = settings['2D_Settings']
+        self.detectProperties3D = settings['3D_Settings']
+
     def on_resolution_change(self, old_size, new_size):
         self.detectProperties2D["pupil_size_max"] *= new_size[0] / old_size[0]
         self.detectProperties2D["pupil_size_min"] *= new_size[0] / old_size[0]
