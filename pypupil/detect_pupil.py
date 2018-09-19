@@ -24,6 +24,15 @@ ipdb = Pdb()
 def nothing(x):
     pass
 
+def load_distortion_map(filename):
+    """Load the distortion map from the file and return as map_x, map_y
+    """
+    fs = cv2.FileStorage(filename, cv2.FileStorage_READ)
+    map_x = fs.getNode('map_x').mat()
+    map_y = fs.getNode('map_y').mat()
+    fs.release()
+    return (map_x, map_y)
+
 def threshold_example():
     # read the image and convert to grayscale
     filename = "/tmp/cut.jpg"
