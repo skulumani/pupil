@@ -1,3 +1,4 @@
+# vim: expandtab tabstop=3 softtabstop=3 shiftwidth=3
 '''
 (*)~---------------------------------------------------------------------------
 Pupil - eye tracking platform
@@ -50,7 +51,7 @@ cdef class Detector_2D:
 
    cdef int coarseDetectionPreviousWidth
    cdef object coarseDetectionPreviousPosition
-
+   
    def __cinit__(self,g_pool = None, settings = None ):
        self.thisptr = new Detector2D()
    def __init__(self, g_pool = None, settings = None ):
