@@ -20,6 +20,7 @@ import av
 import itertools
 from IPython.core.debugger import Pdb
 ipdb = Pdb()
+import argparse
 
 def nothing(x):
     pass
@@ -333,8 +334,14 @@ def detector3d_example(video_filename="../../distortion/data/visor/Calibration -
     return 0
 
 if __name__ == "__main__":
-    video_filename = '/tmp/Calibration - Short-Long Blink for Start and Stop.h264'
-    combined_map_filename = '/tmp/combined_map_interpolation.xml'
+    parser = argparse.ArgumentParser()
+    parser.add_argument("video_file", help="Input MP4 file to process")
+    parser.add_argument("combined_map", help="Combined distortion map")
+    
+    args = parser.parse_args()
+
+    video_filename = args.video_file
+    combined_map_filename = args.combined_map
 
     detector2d_example(video_filename=video_filename,
                      combined_map_filename=combined_map_filename)
