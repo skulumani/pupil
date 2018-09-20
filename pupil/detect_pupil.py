@@ -115,7 +115,7 @@ def detector2d_example(video_filename="../../distortion/data/visor/Calibration -
     # create some trackbars for the settings
     cv2.createTrackbar('Pupil Size Min', 'Frames', 10, 100, nothing)
     cv2.createTrackbar('Pupil Size Max', 'Frames', 150, 250, nothing)
-    cv2.createTrackbar('Intesity Range', 'Frames', 23, 70, nothing)
+    cv2.createTrackbar('Intesity Range', 'Frames', 23, 150, nothing)
     cv2.createTrackbar('ROI Lower X', 'Frames', 100, 400, nothing)
     cv2.createTrackbar('ROI Upper X', 'Frames', 640, 640, nothing)
     cv2.createTrackbar('ROI Lower Y', 'Frames', 100, 400, nothing)
@@ -160,7 +160,7 @@ def detector2d_example(video_filename="../../distortion/data/visor/Calibration -
         # create frame object
         frame = Frame(f.index, f, f.index)
         # remap the image using the distortion map
-        frame.remap(map_x, map_y)
+        # frame.remap(map_x, map_y)
 
         # update settings
         settings['pupil_size_min'] = cv2.getTrackbarPos('Pupil Size Min', 'Frames')
