@@ -69,7 +69,7 @@ def define_detector_settings():
     This dictionary might also be the same that is given to Detector_3D
     """
     settings = {}
-    settings['coarse_detection'] = True
+    settings['coarse_detection'] = False
     settings['coarse_filter_min'] = 128
     settings['coarse_filter_max'] = 280
     settings['intensity_range'] = 23
@@ -116,9 +116,9 @@ def detector2d_example(video_filename="../../distortion/data/visor/Calibration -
     cv2.createTrackbar('Pupil Size Min', 'Frames', 10, 100, nothing)
     cv2.createTrackbar('Pupil Size Max', 'Frames', 150, 250, nothing)
     cv2.createTrackbar('Intesity Range', 'Frames', 23, 150, nothing)
-    cv2.createTrackbar('ROI Lower X', 'Frames', 100, 400, nothing)
+    cv2.createTrackbar('ROI Lower X', 'Frames', 0, 400, nothing)
     cv2.createTrackbar('ROI Upper X', 'Frames', 640, 640, nothing)
-    cv2.createTrackbar('ROI Lower Y', 'Frames', 100, 400, nothing)
+    cv2.createTrackbar('ROI Lower Y', 'Frames', 0, 400, nothing)
     cv2.createTrackbar('ROI Upper Y', 'Frames', 480, 480, nothing)
     
     cv2.createTrackbar('Canny Threshold', 'Frames', 160, 200, nothing)
@@ -179,7 +179,7 @@ def detector2d_example(video_filename="../../distortion/data/visor/Calibration -
         u_r.set((roi_lower_x, roi_lower_y, roi_upper_x, roi_upper_y))
 
         # try to detect
-        results_cpp = detector_cpp.detect(frame, u_r, visualize=True)
+        results_cpp = detector_cpp.detect(frame, u_r, visualize=False)
          
         # extract out the ellipse center, axes, and angle
         pupil_center.append([results_cpp['ellipse']['center'][0], results_cpp['ellipse']['center'][1]])
@@ -190,7 +190,6 @@ def detector2d_example(video_filename="../../distortion/data/visor/Calibration -
         pupil_diameter.append(results_cpp['diameter'])
         pupil_norm_pos.append([results_cpp['norm_pos'][0], results_cpp['norm_pos'][1]])
 
-        output_video.write(frame.img)
         
         # augment the image with a frame number somewhere
         font = cv2.FONT_HERSHEY_SIMPLEX
@@ -198,8 +197,17 @@ def detector2d_example(video_filename="../../distortion/data/visor/Calibration -
         
         # draw the region of interest rectangle
         cv2.rectangle(frame.img, (roi_lower_x, roi_lower_y), (roi_upper_x, roi_upper_y), (0,0, 255))
-
+        
+        # draw the pupil center as a circle
+        cv2.circle(frame.img, (int(pupil_center[-1][0]), int(pupil_center[-1][1])), 10, (0, 0, 255), -1)
+        cv2.ellipse(frame.img, (int(pupil_center[-1][0]), int(pupil_center[-1][1])), 
+                    (int(pupil_axes[-1][0]), int(pupil_axes[-1][1])),
+                    pupil_angle[-1],
+                    0, 360, 
+                    (0, 255, 0),
+                    3)
         # visualize
+        output_video.write(frame.img)
         cv2.imshow("Frames", frame.img)
         k = cv2.waitKey(0) & 0xFF
         if k == ord('q') or k == ord('Q') or k == 27:
@@ -212,10 +220,12 @@ def detector2d_example(video_filename="../../distortion/data/visor/Calibration -
     pupil_angle = np.array(pupil_angle)
 
     pupil_confidence = np.array(pupil_confidence)
-    pupil_diamter = np.array(pupil_diameter)
+    pupil_diameter = np.array(pupil_diameter)
     pupil_norm_pos = np.array(pupil_norm_pos)
 
-    return pupil_confidence
+    return (pupil_center, pupil_axes, pupil_angle, pupil_confidence,
+            pupil_diameter, pupil_norm_pos)
+
     # try to plot the center onto the image
 
 def detector3d_example(video_filename="../../distortion/data/visor/Calibration - Short-Long Blink for Start and Stop.h264",
