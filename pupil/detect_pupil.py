@@ -46,8 +46,7 @@ def threshold_example():
 
     gray_img_size = gray_img.shape[::-1]
     # Resize the image
-    gray_img_resize = cv2.resize(gray_img, dsize=(0, 0), fx=1.0, fy=1.0)
-
+    gray_img_resize = cv2.resize(gray_img, dsize=(0, 0), fx=1.0, fy=1.0) 
     # Use three kinds of adaptive threshold to extract the edges of the image
     # The first one is for complicated scene
     # The Second one is for normal scene
@@ -160,7 +159,7 @@ def detector2d_example(video_filename="../../distortion/data/visor/Calibration -
         # create frame object
         frame = Frame(f.index, f, f.index)
         # remap the image using the distortion map
-        frame.remap(map_x, map_y)
+        # frame.remap(map_x, map_y)
 
         # update settings
         settings['pupil_size_min'] = cv2.getTrackbarPos('Pupil Size Min', 'Frames')
@@ -179,7 +178,7 @@ def detector2d_example(video_filename="../../distortion/data/visor/Calibration -
         u_r.set((roi_lower_x, roi_lower_y, roi_upper_x, roi_upper_y))
 
         # try to detect
-        results_cpp = detector_cpp.detect(frame, u_r, visualize=False)
+        results_cpp = detector_cpp.detect(frame, u_r, visualize=True)
          
         # extract out the ellipse center, axes, and angle
         pupil_center.append([results_cpp['ellipse']['center'][0], results_cpp['ellipse']['center'][1]])
@@ -354,6 +353,6 @@ if __name__ == "__main__":
     combined_map_filename = args.combined_map
 
     detector2d_example(video_filename=video_filename,
-                     combined_map_filename=combined_map_filename)
+                       combined_map_filename=combined_map_filename)
     # detector3d_example(video_filename=video_filename,
     #                  combined_map_filename=combined_map_filename)
