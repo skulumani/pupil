@@ -160,7 +160,7 @@ def detector2d_example(video_filename="../../distortion/data/visor/Calibration -
         # create frame object
         frame = Frame(f.index, f, f.index)
         # remap the image using the distortion map
-        # frame.remap(map_x, map_y)
+        frame.remap(map_x, map_y)
 
         # update settings
         settings['pupil_size_min'] = cv2.getTrackbarPos('Pupil Size Min', 'Frames')
